@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Община Игра</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h2>Община Игра</h2>
+<div id="userInfo"></div>
+
+<h3>Задания</h3>
+<div id="taskList"></div>
+
+<h3>Рейтинг</h3>
+<div id="leaderboard"></div>
+
+<script>
+// Игрок
+let currentUser = {name: "Игрок", xp: 0};
+document.getElementById("userInfo").innerText = 
+  `${currentUser.name}, XP: ${currentUser.xp}`;
+
+// Задания
+let tasks = [
+  {id:1, title:"Приветствие", desc:"Напиши приветствие", reward:10},
+  {id:2, title:"Выполни тест", desc:"Нажми кнопку 'Выполнить'", reward:20},
+  {id:3, title:"Еще одно задание", desc:"Выполни для XP", reward:15},
+];
+
+function renderTasks(){
+  const el = document.getElementById("taskList");
+  el.innerHTML = "";
+  tasks.forEach(t=>{
+    const div = document.createElement("div");
+    div.innerHTML = `<b>${t.title}</b>: ${t.desc}`;
+    const btn = document.createElement("button");
+    btn.innerText = `Выполнить (+${t.reward} XP)`;
+    btn.onclick = ()=>completeTask(t.id);
+    div.appendChild(btn);
+    el.appendChild(div);
+  });
+}
+
+function completeTask(id){
+  const task = tasks.find(t=>t.id===id);
+  if(!task) return;
+  currentUser.xp += task.reward;
+  alert(`Задание "${task.title}" выполнено! +${task.reward} XP`);
+  updateUI();
+}
+
+// Обновление интерфейса
+function updateUI(){
+  document.getElementById("userInfo").innerText = 
+    `${currentUser.name}, XP: ${currentUser.xp}`;
+  renderLeaderboard();
+}
+updateUI();
+
+// Лидерборд
+function renderLeaderboard(){
+  const el = document.getElementById("leaderboard");
+  el.innerHTML = `#1 ${currentUser.name} - ${currentUser.xp} XP`;
+}
+
+// Инициализация
+renderTasks();
+</script>
+
+</body>
+</html>
